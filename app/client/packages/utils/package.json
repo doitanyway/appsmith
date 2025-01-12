@@ -10,5 +10,8 @@
     "test:unit": "yarn g:jest"
   },
   "author": "Aman Agarwal <aman@appsmith.com>, Pawan Kumar <pawan@appsmith.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@appsmith/utils": "file:"
+  }
 }
