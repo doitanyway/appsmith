@@ -40,8 +40,8 @@ docker rm appsmith-redis
 
 
 ```bash
-nvm install v18.17.1
-nvm use v18.17.1
+nvm install v20.11.1
+nvm use v20.11.1
 # 临时配置java
 export JAVA_HOME=/d/software/jdks/jdk-17.0.6
 export PATH=$JAVA_HOME/bin:$PATH
