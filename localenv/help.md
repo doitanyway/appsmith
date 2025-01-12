@@ -52,7 +52,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 ```bash
 cd app/client
-yarn install 
+yarn install
 yarn start
 ```
 
@@ -109,7 +109,7 @@ mvn clean compile
 # 初始化环境文件
 cp envs/dev.env.example .env
 
-# 
+#
 ./build.sh -DskipTests
 
 
@@ -130,6 +130,17 @@ docker run -d --name appsmith -p 8000:80 appsmith/appsmith-ce:latest;
 
 docker logs -f appsmith;
 
-./start-https.sh http://localhost:8000                // if nginx is installed locally
+./start-https.sh http://localhost:8080                // if nginx is installed locally
 ./start-https.sh http://host.docker.internal:8000     // if nginx is running on docker
+```
+
+
+## 打开RTS
+
+```bash
+$ cd app/client/packages/rts
+$ yarn install
+$ yarn start
+
+RTS version SNAPSHOT running at http://localhost:8091
 ```
