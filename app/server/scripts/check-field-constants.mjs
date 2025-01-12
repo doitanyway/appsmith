@@ -83,7 +83,20 @@ async function processJavaFile(filePath) {
 // Can't use `import.meta.dirname` because it's not available in Node.js 18.
 // And v18 is what is included in GitHub Actions today.
 // See <https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md#language-and-runtime>.
-const directoryPath = import.meta.resolve("..").replace("file://", "");
+let directoryPath = import.meta.resolve("..").replace("file://", "");
+console.log("directoryPath:"+directoryPath)
+
+directoryPath = import.meta.resolve("..")
+  .replace("file://", "")
+  // 处理 Windows 路径
+  .replace(/^\/([A-Za-z]:)/, "$1")  // 移除 Windows 驱动器号前的斜杠
+  .replace(/\/{2,}/g, "/")          // 规范化多余的斜杠
+  // 使用 path.normalize 确保跨平台兼容性
+  .split("/")
+  .join(path.sep);
+
+console.log("directoryPath:" + directoryPath);
+
 
 findInnerClassDefinitions(directoryPath)
   .then(isPass => {

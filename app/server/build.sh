@@ -51,10 +51,13 @@ else
 fi
 
 # Create the dist directory
+echo "step 1000"
 mkdir -p dist/plugins
 
 # Copy the server jar
 cp -v ./appsmith-server/target/server-*.jar dist/
+
+echo "step 10000"
 
 # Copy all the plugins
 rsync -av --exclude "original-*.jar" ./appsmith-plugins/*/target/*.jar dist/plugins/

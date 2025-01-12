@@ -42,18 +42,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appsmith/ads-old@workspace:^, @appsmith/ads-old@workspace:packages/design-system/ads-old":
+"@appsmith/ads-old@file:, @appsmith/ads-old@workspace:^, @appsmith/ads-old@workspace:packages/design-system/ads-old":
   version: 0.0.0-use.local
   resolution: "@appsmith/ads-old@workspace:packages/design-system/ads-old"
   dependencies:
+    "@appsmith/ads-old": "file:"
     identity-obj-proxy: 3.0.0
   languageName: unknown
   linkType: soft
 
-"@appsmith/ads@workspace:^, @appsmith/ads@workspace:packages/design-system/ads":
+"@appsmith/ads@file:, @appsmith/ads@workspace:^, @appsmith/ads@workspace:packages/design-system/ads":
   version: 0.0.0-use.local
   resolution: "@appsmith/ads@workspace:packages/design-system/ads"
   dependencies:
+    "@appsmith/ads": "file:"
     "@radix-ui/react-dialog": ^1.0.2
     "@radix-ui/react-dropdown-menu": ^2.0.4
     "@radix-ui/react-hover-card": ^1.0.7
@@ -83,17 +85,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@appsmith/eslint-plugin@workspace:^, @appsmith/eslint-plugin@workspace:packages/eslint-plugin":
+"@appsmith/eslint-plugin@file:, @appsmith/eslint-plugin@workspace:^, @appsmith/eslint-plugin@workspace:packages/eslint-plugin":
   version: 0.0.0-use.local
   resolution: "@appsmith/eslint-plugin@workspace:packages/eslint-plugin"
   dependencies:
+    "@appsmith/eslint-plugin": "file:"
     "@typescript-eslint/utils": 5.62.0
   languageName: unknown
   linkType: soft
 
-"@appsmith/utils@workspace:^, @appsmith/utils@workspace:packages/utils":
+"@appsmith/utils@file:, @appsmith/utils@workspace:^, @appsmith/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@appsmith/utils@workspace:packages/utils"
+  dependencies:
+    "@appsmith/utils": "file:"
   languageName: unknown
   linkType: soft
 
@@ -117,10 +122,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@appsmith/wds-theming@workspace:^, @appsmith/wds-theming@workspace:packages/design-system/theming":
+"@appsmith/wds-theming@file:, @appsmith/wds-theming@workspace:^, @appsmith/wds-theming@workspace:packages/design-system/theming":
   version: 0.0.0-use.local
   resolution: "@appsmith/wds-theming@workspace:packages/design-system/theming"
   dependencies:
+    "@appsmith/wds-theming": "file:"
     "@capsizecss/core": ^3.1.1
     "@capsizecss/metrics": ^1.2.0
     "@emotion/css": ^11.13.0
@@ -3012,10 +3018,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@design-system/widgets-old@workspace:^, @design-system/widgets-old@workspace:packages/design-system/widgets-old":
+"@design-system/widgets-old@file:, @design-system/widgets-old@workspace:^, @design-system/widgets-old@workspace:packages/design-system/widgets-old":
   version: 0.0.0-use.local
   resolution: "@design-system/widgets-old@workspace:packages/design-system/widgets-old"
   dependencies:
+    "@design-system/widgets-old": "file:"
     "@types/react-table": "*"
     identity-obj-proxy: 3.0.0
   peerDependencies:
@@ -8710,11 +8717,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shared/ast@workspace:^, @shared/ast@workspace:packages/ast":
+"@shared/ast@file:, @shared/ast@workspace:^, @shared/ast@workspace:packages/ast":
   version: 0.0.0-use.local
   resolution: "@shared/ast@workspace:packages/ast"
   dependencies:
     "@rollup/plugin-commonjs": ^22.0.0
+    "@shared/ast": "file:"
     "@types/escodegen": ^0.0.7
     "@types/jest": 29.0.3
     "@types/lodash": ^4.14.120
@@ -8738,12 +8746,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@shared/dsl@workspace:^, @shared/dsl@workspace:packages/dsl":
+"@shared/dsl@file:, @shared/dsl@workspace:^, @shared/dsl@workspace:packages/dsl":
   version: 0.0.0-use.local
   resolution: "@shared/dsl@workspace:packages/dsl"
   dependencies:
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-json": ^6.0.0
+    "@shared/dsl": "file:"
     "@types/lodash": ^4.14.120
     jest: ^29.5.0
     normalizr: ^3.6.2
@@ -13073,12 +13082,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appsmith-icons@workspace:^, appsmith-icons@workspace:packages/icons":
+"appsmith-icons@file:, appsmith-icons@workspace:^, appsmith-icons@workspace:packages/icons":
   version: 0.0.0-use.local
   resolution: "appsmith-icons@workspace:packages/icons"
   dependencies:
     "@svgr/core": ^8.1.0
     "@svgr/plugin-jsx": ^8.1.0
+    appsmith-icons: "file:"
     fast-glob: ^3.3.2
     figmagic: ^4.5.13
     fs-extra: ^11.2.0

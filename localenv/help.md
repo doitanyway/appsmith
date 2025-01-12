@@ -11,7 +11,7 @@ $ docker run -d -p 127.0.0.1:27017:27017 --name appsmith-mongodb --hostname=loca
 
 # 进入容器
 $ docker exec -it appsmith-mongodb bash
-# 初始化mongodb 
+# 初始化mongodb
 root@localhost:/# mongosh
 # 查看副本状态
 test> rs.initiate({"_id": "rs0", "members" : [{"_id":0 , "host": "localhost:27017" }]})
@@ -19,20 +19,19 @@ test> rs.status()
 
 ## 清理容器
 docker stop appsmith-mongodb
-docker rm appsmith-mongodb 
+docker rm appsmith-mongodb
 ```
 
 
 
 ## 本地redis
 
-```bash 
+```bash
 docker run -d -p 127.0.0.1:6379:6379 --name appsmith-redis redis:7.2.7
-
 
 ## 清理容器
 docker stop appsmith-redis
-docker rm appsmith-redis 
+docker rm appsmith-redis
 
 ````
 
@@ -40,7 +39,7 @@ docker rm appsmith-redis
 ## node和java（按需）
 
 
-```bash 
+```bash
 nvm install v18.17.1
 nvm use v18.17.1
 # 临时配置java
@@ -51,18 +50,33 @@ export PATH=$JAVA_HOME/bin:$PATH
 ## 打开前端
 
 
+```bash
+cd app/client
+yarn install 
+yarn start
+```
 
-```bash 
+## 打开前端
+
+
+
+```bash
 cd app/client/docker && mkcert -install && mkcert "*.appsmith.com" && cd ../../..
 #  配置host文件  127.0.0.1 dev.appsmith.com
 cd app/client
-./start-https.sh https://release.app.appsmith.com       // uses Appsmith's staging backend server as backend for your local frontend code
+#  uses Appsmith's staging backend server as backend for your local frontend code
+./start-https.sh https://release.app.appsmith.com
 
-./start-https.sh https://release.app.appsmith.com  --without-docker 
+./start-https.sh https://release.app.appsmith.com  --without-docker
+# if nginx is installed locally
+./start-https.sh http://localhost:8080  --without-docker
+
+# // if nginx is running on docker
+./start-https.sh http://host.docker.internal:8000   --without-docker
 
 # 官方目前对windows支持还有问题，如上代码启动在windows上修改还有问题，请参考如下说明修改
 # 在 appsmith\app\client\nginx 下生成证书文件和配置文件：dev.appsmith.com.pem、dev.appsmith.com-key.pem、nginx.dev.conf，
-# 按实际目录修改文件路径： 
+# 按实际目录修改文件路径：
 # error_log D:/codes/appsmith/nginx-1.26.2/logs/error.log info;
 # pid D:/codes/appsmith/app/client/nginx/wildcard-nginx.pid;
 # include D:/codes/appsmith/nginx-1.26.2/conf/mime.types;
@@ -82,7 +96,11 @@ nginx -c /d/codes/appsmith/app/client/nginx/nginx.dev.conf -p /d/codes/appsmith/
 ## 打开后端
 
 
-```bash 
+```bash
+
+export JAVA_HOME=/d/software/jdks/jdk-17.0.6
+export PATH=$JAVA_HOME/bin:$PATH
+
 cd  app/server
 
 
@@ -91,10 +109,15 @@ mvn clean compile
 # 初始化环境文件
 cp envs/dev.env.example .env
 
+# 
+./build.sh -DskipTests
+
+
+
 ```
 
 
-```bash 
+```bash
 docker rm appsmith;
 
 cd ~/appsmith;

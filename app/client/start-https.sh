@@ -104,6 +104,16 @@ fi
 working_dir="$PWD/nginx"
 mkdir -pv "$working_dir"
 
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+    # 转换 Windows 路径格式
+    working_dir=$(echo "$working_dir" | sed 's/^\/\([a-zA-Z]\)\//\1:\//g')
+fi
+
+project_dir=$(echo $working_dir | sed 's/\/app\/client\/nginx//g')
+
+echo "working_dir = $working_dir"
+echo "project_dir = $project_dir"
+
 domain=dev.appsmith.com
 
 key_file="$working_dir/$domain-key.pem"
@@ -183,8 +193,12 @@ else
     " >&2
 fi
 
-
-if [[ -f /etc/nginx/mime.types || $run_as == docker ]]; then
+# if [[ $run_as == docker ]]
+echo "run_as = $run_as"
+if [[ -f /etc/nginx/mime.types || $run_as == nginx ]]; then
+    mime_types=${project_dir}/nginx-1.26.2/conf/mime.types
+    echo "mime_types = $mime_types"
+elif [[ -f /etc/nginx/mime.types || $run_as == docker ]]; then
     mime_types=/etc/nginx/mime.types
 elif type nginx >/dev/null; then
     mime_types="$(dirname "$(nginx -t 2>&1 | head -1 | cut -d' ' -f5)")/mime.types"
@@ -199,9 +213,14 @@ if [[ -z ${mime_types-} ]]; then
 fi
 
 
-nginx_pid="$working_dir/wildcard-nginx.pid"
-nginx_access_log="$working_dir/access.log"
-nginx_error_log="$working_dir/error.log"
+# nginx_pid="$working_dir/wildcard-nginx.pid"
+nginx_pid="$project_dir/nginx-1.26.2/logs/wildcard-nginx.pid"
+nginx_access_log="$project_dir/nginx-1.26.2/logs/access.log"
+nginx_error_log="$project_dir/nginx-1.26.2/logs/error.log"
+
+# nginx_access_log="logs/access.log"
+# nginx_error_log="logs/error.log"
+
 rm -f "$nginx_access_log" "$nginx_error_log"
 
 nginx_dev_conf="$working_dir/nginx.dev.conf"
@@ -259,7 +278,8 @@ $(if [[ $use_https == 1 ]]; then echo "
 
     server {
 $(if [[ $use_https == 1 ]]; then echo "
-        listen $https_listen_port ssl http2 default_server;
+        listen $https_listen_port ssl default_server;
+        http2 on;
         server_name $domain;
         ssl_certificate '$cert_file';
         ssl_certificate_key '$key_file';
@@ -355,7 +375,10 @@ if [[ -n $remaining_listeners ]]; then
     done
 fi
 
+
+
 if [[ $run_as == nginx ]]; then
+    echo "locally start nginx"
     nginx -c "$nginx_dev_conf"
     stop_cmd="nginx -c '$nginx_dev_conf' -s quit"
 
