@@ -12,6 +12,7 @@
     "test:unit": "yarn g:jest"
   },
   "dependencies": {
+    "@appsmith/eslint-plugin": "file:",
     "@typescript-eslint/utils": "5.62.0"
   }
 }
