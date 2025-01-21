@@ -18,8 +18,8 @@ test> rs.initiate({"_id": "rs0", "members" : [{"_id":0 , "host": "localhost:2701
 test> rs.status()
 
 ## 清理容器
-docker stop appsmith-mongodb
-docker rm appsmith-mongodb
+# docker stop appsmith-mongodb
+# docker rm appsmith-mongodb
 ```
 
 
@@ -30,8 +30,8 @@ docker rm appsmith-mongodb
 docker run -d -p 127.0.0.1:6379:6379 --name appsmith-redis redis:7.2.7
 
 ## 清理容器
-docker stop appsmith-redis
-docker rm appsmith-redis
+# docker stop appsmith-redis
+# docker rm appsmith-redis
 
 ````
 
@@ -45,6 +45,12 @@ nvm use v20.11.1
 # 临时配置java
 export JAVA_HOME=/d/software/jdks/jdk-17.0.6
 export PATH=$JAVA_HOME/bin:$PATH
+
+# 使用sdkman配置
+sdk install java 17.0.7-oracle
+sdk use java 17.0.7-oracle default
+
+
 ```
 
 ## 打开前端
@@ -53,10 +59,11 @@ export PATH=$JAVA_HOME/bin:$PATH
 ```bash
 cd app/client
 yarn install
+#
 yarn start
 ```
 
-## 打开前端
+## 打开nginx代理
 
 
 
@@ -70,6 +77,8 @@ cd app/client
 ./start-https.sh https://release.app.appsmith.com  --without-docker
 # if nginx is installed locally
 ./start-https.sh http://localhost:8080  --without-docker
+#
+./start-https.sh --with-docker
 
 # // if nginx is running on docker
 ./start-https.sh http://host.docker.internal:8000   --without-docker
@@ -89,6 +98,7 @@ nginx -c /d/codes/appsmith/app/client/nginx/nginx.dev.conf -p /d/codes/appsmith/
 # 关闭NGINX
 nginx -c /d/codes/appsmith/app/client/nginx/nginx.dev.conf -p /d/codes/appsmith/nginx-1.26.2 -s quit
 
+
 ```
 
 > [安装nginx](./nginx.md)
@@ -101,39 +111,22 @@ nginx -c /d/codes/appsmith/app/client/nginx/nginx.dev.conf -p /d/codes/appsmith/
 export JAVA_HOME=/d/software/jdks/jdk-17.0.6
 export PATH=$JAVA_HOME/bin:$PATH
 
+
 cd  app/server
 
 
 # 从源代码生成idea需要的类
-mvn clean compile
+# mvn clean compile
 # 初始化环境文件
 cp envs/dev.env.example .env
 
 #
 ./build.sh -DskipTests
 
-
+# 默认服务启动在8080端口. 访问： http://localhost:8080/api/v1/users/me
+./scripts/start-dev-server.sh
 
 ```
-
-
-```bash
-docker rm appsmith;
-
-cd ~/appsmith;
-
-rm -rf stacks;
-
-docker pull appsmith/appsmith-ce
-
-docker run -d --name appsmith -p 8000:80 appsmith/appsmith-ce:latest;
-
-docker logs -f appsmith;
-
-./start-https.sh http://localhost:8080                // if nginx is installed locally
-./start-https.sh http://host.docker.internal:8000     // if nginx is running on docker
-```
-
 
 ## 打开RTS
 
