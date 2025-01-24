@@ -14,7 +14,7 @@ import { isAirgapped } from "ee/utils/airgapHelpers";
 
 const isAirgappedInstance = isAirgapped();
 
-export const config: AdminConfigType = {
+  export const config: AdminConfigType = {
   icon: "timer-2-line",
   type: SettingCategories.VERSION,
   categoryType: CategoryType.GENERAL,
@@ -27,7 +27,7 @@ export const config: AdminConfigType = {
       category: SettingCategories.VERSION,
       controlType: SettingTypes.TEXT,
       label: "Current version",
-    },
+    },  
     {
       id: "APPSMITH_VERSION_READ_MORE",
       action: (dispatch?: Dispatch<ReduxAction<boolean>>) => {
