@@ -17,6 +17,7 @@ export const Container = styled.div`
   }
 `;
 
+
 export default function UpgradePage(props: UpgradePageProps) {
   const { carousel, footer, header } = props;
 

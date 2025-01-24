@@ -4,16 +4,16 @@ import {
   SettingCategories,
   SettingTypes,
 } from "ee/pages/AdminSettings/config/types";
-import { ProvisioningUpgradePage } from "../../Upgrade/ProvisioningUpgradePage";
+import UserListPage  from "../../UserList/UserListPage";
 
 export const config: AdminConfigType = {
   icon: "user-2-line",
   type: SettingCategories.USERS,
   categoryType: CategoryType.ACL,
   controlType: SettingTypes.PAGE,
-  component: ProvisioningUpgradePage,
+  component: UserListPage,
   title: "User",
   canSave: false,
-  isFeatureEnabled: false,
-  isEnterprise: true,
+  isFeatureEnabled: true,
+  isEnterprise: false,
 } as AdminConfigType;
