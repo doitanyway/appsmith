@@ -8,7 +8,8 @@ import { config as AdvancedConfig } from "pages/AdminSettings/config/advanced";
 import { config as Authentication } from "ee/pages/AdminSettings/config/authentication";
 import { config as BrandingConfig } from "ee/pages/AdminSettings/config/branding";
 import { config as ProvisioningConfig } from "ee/pages/AdminSettings/config/provisioning";
-import { config as UserListing } from "ee/pages/AdminSettings/config//userlisting";
+import { config as UsersConfig } from "ee/pages/AdminSettings/config/users";
+import { config as UserListing } from "ee/pages/AdminSettings/config/userlisting";
 import { config as AuditLogsConfig } from "ee/pages/AdminSettings/config/auditlogs";
 
 ConfigFactory.register(GeneralConfig);
@@ -19,6 +20,7 @@ ConfigFactory.register(AdvancedConfig);
 ConfigFactory.register(VersionConfig);
 ConfigFactory.register(BrandingConfig);
 ConfigFactory.register(ProvisioningConfig);
+ConfigFactory.register(UsersConfig);
 ConfigFactory.register(UserListing);
 ConfigFactory.register(AuditLogsConfig);
 

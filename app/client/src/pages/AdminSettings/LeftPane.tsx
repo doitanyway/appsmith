@@ -213,6 +213,7 @@ export default function LeftPane() {
     aclCategories,
     isSuperUser,
   );
+  console.log("filteredAclCategories",filteredAclCategories)
 
   const filteredOthersCategories = getFilteredOtherCategories(
     othersCategories,

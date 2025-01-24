@@ -59,6 +59,7 @@ export class ConfigFactory {
   }
 
   static register(config: AdminConfigType) {
+    // debugger
     ConfigFactory.registerSettings(config);
     ConfigFactory.registerCategory(config);
   }
