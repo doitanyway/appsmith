@@ -145,8 +145,8 @@ export function PageMenu(props: NavigationProps) {
                 currentApplicationDetails={application}
                 insideSidebar
               />
-
-              {!hideWatermark && (
+              {/*{!hideWatermark && (*/}
+              {false && (
                 <a
                   className="flex mt-2 hover:no-underline"
                   href="https://appsmith.com"

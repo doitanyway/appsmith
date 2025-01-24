@@ -234,7 +234,8 @@ function AppViewer(props: Props) {
             {isInitialized && <AppViewerPageContainer />}
           </AppViewerBody>
           <div className={"fixed hidden right-8 z-3 md:flex bottom-4"}>
-            {!hideWatermark && (
+            {/*{!hideWatermark && (*/}
+            { false && (
               <a
                 className="hover:no-underline"
                 href="https://appsmith.com"
