@@ -35,54 +35,84 @@ export const PageWrapper = styled.div`
   margin-top: 24px;
 `;
 
-const columns = [
-  {
-    title: "用户名",
-    dataIndex: "name",
-  },
-  {
-    title: "邮箱",
-    dataIndex: "email",
-  },
-  {
-    title: "操作",
-    dataIndex: "address",
-    render: (value: { city: string }) => `${value.city}`,
-    sortBy: "city",
-  },
-];
-
-const fakeData = [
-  {
-    key: "1",
-    name: "Ash",
-    email: "Ash@163.com",
-    address: { city: "New York" },
-  },
-  {
-    key: "2",
-    name: "Jane",
-    email: "Jane@163.com",
-    address: { city: "Los Angeles" },
-  },
-  {
-    key: "3",
-    name: "Doe",
-    email: "Doe@163.com",
-    address: { city: "Chicago" },
-  },
-];
 
 export default function UserListPage() {
   // const { carousel, footer, header } = props;
   const [pageIndex, setPageIndex] = useState(1);
 
+
+
+  const columns = [
+    {
+      title: "用户名",
+      dataIndex: "name",
+    },
+    {
+      title: "邮箱",
+      dataIndex: "email",
+    },
+    {
+      title: "操作",
+      dataIndex: "actions",
+      render: (index:any, record:any) => (
+        <div style={{ display: "flex", gap: "8px" }}>
+          <Button
+            size="sm"
+            onClick={() => handleEdit(record)}
+            aria-label="编辑用户"
+            isIconButton
+            startIcon="user-2"
+          >
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => handleDelete(record)}
+            color="danger"
+            aria-label="删除用户"
+            isIconButton
+            kind="error"
+            startIcon="close-modal"
+          >
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  const fakeData = [
+    {
+      key: "1",
+      name: "Ash",
+      email: "Ash@163.com",
+      address: { city: "New York" },
+    },
+    {
+      key: "2",
+      name: "Jane",
+      email: "Jane@163.com",
+      address: { city: "Los Angeles" },
+    },
+    {
+      key: "3",
+      name: "Doe",
+      email: "Doe@163.com",
+      address: { city: "Chicago" },
+    },
+  ];
   const onClickNewUser =()=>{
     console.log("onClickNewUser")
   }
   const onClickSearchUser =()=>{
     console.log("onClickSearchUser")
   }
+
+  const handleEdit = (record:any) => {
+    console.log("编辑用户:", record);
+  };
+
+  const handleDelete = (record:any) => {
+    console.log("删除用户:", record);
+  };
 
   const onPageChange =(page:any,pageSize:any)=>{
     console.log(`page change ${page} ,${pageSize} `);
@@ -116,7 +146,6 @@ export default function UserListPage() {
           </Button>
         </OperationWrapper>
         <Table columns={columns} data={fakeData} isSortable />
-        {/*<Pagination simple total={100} current={pageIndex} pageSize={10}  />*/}
         <PageWrapper>
           <Pagination className="ant-pagination" current={pageIndex}  pageSize={10} total={450} onChange={onPageChange} />
         </PageWrapper>
