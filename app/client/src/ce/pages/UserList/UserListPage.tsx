@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import {Table, Button, Input, Text} from "@appsmith/ads";
 import {createMessage, UPGRADE} from "../../constants/messages";
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
+
 export const Wrapper = styled.div`
   flex-basis: calc(100% - ${(props) => props.theme.homePage.leftPane.width}px);
   padding: var(--ads-v2-spaces-7);
@@ -23,6 +26,13 @@ export const OperationWrapper = styled.div`
   display: flex;
   gap: 16px; /* 设置子元素之间的间距，例如 16px */
   margin-bottom: 24px;
+`;
+
+export const PageWrapper = styled.div`
+  max-width: 40rem;
+  display: flex;
+  gap: 16px; /* 设置子元素之间的间距，例如 16px */
+  margin-top: 24px;
 `;
 
 const columns = [
@@ -65,10 +75,19 @@ const fakeData = [
 
 export default function UserListPage() {
   // const { carousel, footer, header } = props;
+  const [pageIndex, setPageIndex] = useState(1);
+
   const onClickNewUser =()=>{
     console.log("onClickNewUser")
   }
+  const onClickSearchUser =()=>{
+    console.log("onClickSearchUser")
+  }
 
+  const onPageChange =(page:any,pageSize:any)=>{
+    console.log(`page change ${page} ,${pageSize} `);
+    setPageIndex(page)
+  }
 
   return (
     <Wrapper>
@@ -88,8 +107,8 @@ export default function UserListPage() {
           用户配置
         </SettingsSubHeader>
         <OperationWrapper>
-          <Input  size="md"  className="space-y-4" placeholder={"输入搜索"} ></Input>
-          <Button data-testid="t--button-upgrade" onClick={onClickNewUser} size="md">
+          <Input  size="md"  aria-label="Add" className="space-y-4" placeholder={"输入搜索"} ></Input>
+          <Button data-testid="t--button-upgrade" onClick={onClickSearchUser} size="md">
             搜索
           </Button>
           <Button data-testid="t--button-upgrade" onClick={onClickNewUser} size="md">
@@ -97,6 +116,10 @@ export default function UserListPage() {
           </Button>
         </OperationWrapper>
         <Table columns={columns} data={fakeData} isSortable />
+        {/*<Pagination simple total={100} current={pageIndex} pageSize={10}  />*/}
+        <PageWrapper>
+          <Pagination className="ant-pagination" current={pageIndex}  pageSize={10} total={450} onChange={onPageChange} />
+        </PageWrapper>
       </SettingsFormWrapper>
     </Wrapper>
   );
