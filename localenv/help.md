@@ -42,6 +42,8 @@ docker run -d -p 127.0.0.1:6379:6379 --name appsmith-redis redis:7.2.7
 ```bash
 nvm install v20.11.1
 nvm use v20.11.1
+nvm alias default 20.11.1
+
 # 临时配置java
 export JAVA_HOME=/d/software/jdks/jdk-17.0.6
 export PATH=$JAVA_HOME/bin:$PATH

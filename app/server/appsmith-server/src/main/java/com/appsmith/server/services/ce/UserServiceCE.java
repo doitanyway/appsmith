@@ -48,4 +48,20 @@ public interface UserServiceCE extends CrudService<User, String> {
     Mono<Boolean> resendEmailVerification(ResendEmailVerificationDTO resendEmailVerificationDTO, String redirectUrl);
 
     Mono<Void> verifyEmailVerificationToken(ServerWebExchange exchange);
+
+    /**
+     * 分页查询用户列表
+     * @param page 页码(从0开始)
+     * @param size 每页大小
+     * @param email 可选的邮箱搜索条件
+     * @return 用户列表
+     */
+    Flux<User> findAllByPagination(int page, int size, String email);
+
+    /**
+     * 获取符合条件的用户总数
+     * @param email 可选的邮箱搜索条件
+     * @return 用户总数
+     */
+    Mono<Long> countUsers(String email);
 }

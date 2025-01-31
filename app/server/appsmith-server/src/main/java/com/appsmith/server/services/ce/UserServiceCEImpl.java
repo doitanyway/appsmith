@@ -901,4 +901,14 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                     });
         });
     }
+
+    @Override
+    public Flux<User> findAllByPagination(int page, int size, String email) {
+        return repository.findAllByPagination(page,size,email);
+    }
+
+    @Override
+    public Mono<Long> countUsers(String email) {
+        return repository.countUsers(email);
+    }
 }

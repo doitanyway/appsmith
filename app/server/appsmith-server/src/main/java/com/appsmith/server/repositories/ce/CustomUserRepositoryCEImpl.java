@@ -10,7 +10,10 @@ import com.appsmith.server.helpers.ce.bridge.BridgeQuery;
 import com.appsmith.server.projections.IdOnly;
 import com.appsmith.server.repositories.BaseAppsmithRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.UpdateDefinition;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
@@ -62,4 +65,33 @@ public class CustomUserRepositoryCEImpl extends BaseAppsmithRepositoryImpl<User>
         }
         return queryBuilder().byId(id).updateFirst(updateObj);
     }
+
+    @Override
+    public Flux<User> findAllByPagination(int page, int size, String email) {
+        var query = queryBuilder();
+
+        // Exclude system-generated user emails
+        query.criteria(Criteria.where(User.Fields.email).nin(getSystemGeneratedUserEmails()));
+
+        // Filter by email if the parameter is provided
+        if (email != null && !email.isEmpty()) {
+            query.criteria(Criteria.where(User.Fields.email).regex(".*" + email + ".*", "i")); // Case-insensitive regex match
+        }
+
+        // Apply sorting, pagination, and return the results
+        return query
+            .sort(Sort.by(Sort.Direction.ASC, User.Fields.email)) // Sort by email in ascending order
+            .skip(page * size) // Skip records for pagination
+            .limit(size) // Limit to the size of the page
+            .all();
+    }
+
+
+    @Override
+    public Mono<Long> countUsers(String email) {
+        return queryBuilder()
+                .criteria(Bridge.notIn(User.Fields.email, getSystemGeneratedUserEmails()))
+                .count();
+    }
+
 }

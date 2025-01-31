@@ -4,12 +4,7 @@ import com.appsmith.external.views.Views;
 import com.appsmith.server.constants.Url;
 import com.appsmith.server.domains.User;
 import com.appsmith.server.domains.UserData;
-import com.appsmith.server.dtos.InviteUsersDTO;
-import com.appsmith.server.dtos.ResendEmailVerificationDTO;
-import com.appsmith.server.dtos.ResetUserPasswordDTO;
-import com.appsmith.server.dtos.ResponseDTO;
-import com.appsmith.server.dtos.UserProfileDTO;
-import com.appsmith.server.dtos.UserUpdateDTO;
+import com.appsmith.server.dtos.*;
 import com.appsmith.server.services.SessionUserService;
 import com.appsmith.server.services.UserDataService;
 import com.appsmith.server.services.UserService;
@@ -17,12 +12,16 @@ import com.appsmith.server.services.UserWorkspaceService;
 import com.appsmith.server.solutions.UserAndAccessManagementService;
 import com.appsmith.server.solutions.UserSignup;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.Part;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,10 +34,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequestMapping(Url.USER_URL)
 @RequiredArgsConstructor
@@ -214,4 +216,40 @@ public class UserControllerCE {
     public Mono<Void> verifyEmailVerificationToken(ServerWebExchange exchange) {
         return service.verifyEmailVerificationToken(exchange);
     }
+
+
+
+//    @JsonView(Views.Public.class)
+//    @PostMapping("/invite")
+//    public Mono<ResponseDTO<List<User>>> inviteUsers(
+//        @RequestBody InviteUsersDTO inviteUsersDTO,
+//        @RequestHeader("Origin") String originHeader,
+//        @RequestParam(required = false) String recaptchaToken) {
+//        return userAndAccessManagementService
+//            .inviteUsers(inviteUsersDTO, originHeader, recaptchaToken)
+//            .map(users -> new ResponseDTO<>(HttpStatus.OK.value(), users, null));
+//    }
+
+    @JsonView(Views.Public.class)
+    @GetMapping("/pageList")
+    public Mono<ResponseDTO<List<User>>> findAllByPagination(@RequestParam @Min(1) int page,          // 参数校验：最小值为1
+                                                             @RequestParam @Min(1) @Max(100) int size,// 校验每页数量在1-100之间
+                                                             @RequestParam String email        ) {
+                                                             // 获取 Flux 数据并阻塞获取结果（实际项目需谨慎使用阻塞）
+        return service.findAllByPagination(page-1, size, email)
+            .collectList()
+            .timeout(Duration.ofSeconds(5))      // 超时控制
+            .map(userList -> new ResponseDTO<>(
+                200,
+                userList,
+                "查询成功",
+                true
+            ));
+    }
+
+
+//    public Mono<Long> countUsers(String email) {
+//
+//
+//    }
 }
