@@ -232,24 +232,20 @@ public class UserControllerCE {
 
     @JsonView(Views.Public.class)
     @GetMapping("/pageList")
-    public Mono<ResponseDTO<List<User>>> findAllByPagination(@RequestParam @Min(1) int page,          // 参数校验：最小值为1
+    public Mono<ResponseDTO<UserPageList>> findAllByPagination(@RequestParam @Min(1) int page,          // 参数校验：最小值为1
                                                              @RequestParam @Min(1) @Max(100) int size,// 校验每页数量在1-100之间
                                                              @RequestParam String email        ) {
-                                                             // 获取 Flux 数据并阻塞获取结果（实际项目需谨慎使用阻塞）
-        return service.findAllByPagination(page-1, size, email)
+        Long total = service.countUsers(email).block();
+        return service.findAllByPagination(page - 1, size, email)
             .collectList()
-            .timeout(Duration.ofSeconds(5))      // 超时控制
-            .map(userList -> new ResponseDTO<>(
-                200,
-                userList,
-                "查询成功",
-                true
-            ));
+            .timeout(Duration.ofSeconds(5))
+            .map(userList -> {
+                UserPageList userPageList = new UserPageList();
+                userPageList.setPage(page);
+                userPageList.setSize(size);
+                userPageList.setTotal(total);
+                userPageList.setUsers(userList); // 注意这里直接设置List<User>即可
+                return new ResponseDTO<>(200, userPageList, "查询成功", true);
+            });
     }
-
-
-//    public Mono<Long> countUsers(String email) {
-//
-//
-//    }
 }

@@ -37,12 +37,18 @@ export const PageWrapper = styled.div`
   margin-top: 24px;
 `;
 
+interface User {
+  key: string;
+  name: string;
+  email: string;
+}
 
 export default function UserListPage() {
   // const { carousel, footer, header } = props;
   const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(3);
   const [total, setTotal] = useState(0);  // 假设接口返回总条数
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchEmail, setSearchEmail] = useState("");
 
   const columns = [
@@ -81,31 +87,10 @@ export default function UserListPage() {
       ),
     },
   ];
-
-  const fakeData = [
-    {
-      key: "1",
-      name: "Ash",
-      email: "Ash@163.com",
-      address: { city: "New York" },
-    },
-    {
-      key: "2",
-      name: "Jane",
-      email: "Jane@163.com",
-      address: { city: "Los Angeles" },
-    },
-    {
-      key: "3",
-      name: "Doe",
-      email: "Doe@163.com",
-      address: { city: "Chicago" },
-    },
-  ];
-
-  const onClickSearchUser =()=>{
-    console.log("onClickSearchUser")
-  }
+  const onClickSearchUser = () => {
+    setPageIndex(1);
+    fetchUserPageList()
+  };
 
   const handleEdit = (record:any) => {
     console.log("编辑用户:", record);
@@ -125,22 +110,32 @@ export default function UserListPage() {
       // 调用接口，传入 PageListRequest 参数 { page, size, email }
       const response = await UserApi.getUserPageList({
         page: pageIndex,
-        size: 10,
+        size: pageSize,
         email: searchEmail,
       });
       // 假设接口返回的数据结构为 { data: 用户数组, total: 总条数 }
       console.log("fetchUserPageList",response.data)
-      // setUsers(response.data.data);
-      // setTotal(response.data.total);
+      // @ts-ignore
+      setPageIndex(response.data?.page)
+      // @ts-ignore
+      setTotal(response.data?.total)
+      // @ts-ignore
+      const us = response.data?.users.map(v =>{
+        return {
+          key: v.id,
+          name: v.username,
+          email: v.email
+        }
+      })
+      setUsers(us)
     } catch (error) {
       console.error("获取用户列表失败：", error);
     }
   }
 
   useEffect(() => {
-
     fetchUserPageList();
-  }, [pageIndex, searchEmail]);
+  }, [pageIndex]);
 
   return (
     <Wrapper>
@@ -160,14 +155,18 @@ export default function UserListPage() {
           用户配置
         </SettingsSubHeader>
         <OperationWrapper>
-          <Input  size="md"  aria-label="Add" className="space-y-4" placeholder={"输入搜索"} ></Input>
-          <Button data-testid="t--button-upgrade" onClick={onClickSearchUser} size="md">
+          <Input  size="md"  aria-label="Add" className="space-y-4"
+                  placeholder={"输入搜索"}
+                  value={searchEmail}
+                  onChange={(value) => setSearchEmail(value)}
+          ></Input>
+          <Button data-testid="t--button-upgrade" onClick={() => onClickSearchUser()} size="md">
             搜索
           </Button>
         </OperationWrapper>
-        <Table columns={columns} data={fakeData} isSortable />
+        <Table columns={columns} data={users} isSortable />
         <PageWrapper>
-          <Pagination className="ant-pagination" current={pageIndex}  pageSize={10} total={450} onChange={onPageChange} />
+          <Pagination className="ant-pagination" current={pageIndex}  pageSize={pageSize} total={total} onChange={onPageChange} />
         </PageWrapper>
       </SettingsFormWrapper>
     </Wrapper>

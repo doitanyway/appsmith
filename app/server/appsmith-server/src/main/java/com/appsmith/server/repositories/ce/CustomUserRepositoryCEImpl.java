@@ -89,9 +89,17 @@ public class CustomUserRepositoryCEImpl extends BaseAppsmithRepositoryImpl<User>
 
     @Override
     public Mono<Long> countUsers(String email) {
-        return queryBuilder()
-                .criteria(Bridge.notIn(User.Fields.email, getSystemGeneratedUserEmails()))
-                .count();
+
+        var query = queryBuilder();
+
+        // Exclude system-generated user emails
+        query.criteria(Criteria.where(User.Fields.email).nin(getSystemGeneratedUserEmails()));
+
+        // Filter by email if the parameter is provided
+        if (email != null && !email.isEmpty()) {
+            query.criteria(Criteria.where(User.Fields.email).regex(".*" + email + ".*", "i")); // Case-insensitive regex match
+        }
+        return query.count();
     }
 
 }
