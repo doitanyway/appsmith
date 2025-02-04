@@ -1,11 +1,29 @@
 import React, {useState,useEffect} from "react";
 import styled from "styled-components";
-import {Table, Button, Input, Text} from "@appsmith/ads";
+import {
+  Table,
+  Button,
+  Input,
+  Text,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Callout,
+  ModalFooter,
+  ModalContent
+} from "@appsmith/ads";
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import UserApi from "ce/api/UserApi";
+import {AUTOCOMMIT_CONFIRM_DISABLE_MESSAGE, AUTOCOMMIT_DISABLE, createMessage} from "../../constants/messages";
 
+const StyledModalContent = styled(ModalContent)`
+  width: 640px;
+`;
 
+const StyledModalHeader = styled(ModalHeader)`
+  margin: 0;
+`;
 export const Wrapper = styled.div`
   flex-basis: calc(100% - ${(props) => props.theme.homePage.leftPane.width}px);
   padding: var(--ads-v2-spaces-7);
@@ -49,6 +67,7 @@ export default function UserListPage() {
   const [total, setTotal] = useState(0);  // 假设接口返回总条数
   const [users, setUsers] = useState<User[]>([]);
   const [searchEmail, setSearchEmail] = useState("");
+  const [isAutocommitDisableModalOpen,setIsAutocommitDisableModalOpen] = useState(true)
 
   const columns = [
     {
@@ -136,6 +155,14 @@ export default function UserListPage() {
     fetchUserPageList();
   }, [pageIndex]);
 
+  function handleModalOpenChange(open: boolean) {
+    console.log("onModalClose",open)
+  }
+
+  let isToggleAutocommitLoading;
+  const handleDisableAutocommit = () => {
+
+  } ;
   return (
     <Wrapper>
       <SettingsFormWrapper>
@@ -168,6 +195,32 @@ export default function UserListPage() {
           <Pagination className="ant-pagination" current={pageIndex}  pageSize={pageSize} total={total} onChange={onPageChange} />
         </PageWrapper>
       </SettingsFormWrapper>
+      <Modal
+        onOpenChange={handleModalOpenChange}
+        open={isAutocommitDisableModalOpen}
+      >
+        <StyledModalContent data-testid="t--autocommit-git-modal">
+          <StyledModalHeader>
+             标题
+          </StyledModalHeader>
+          <ModalBody>
+            <Callout kind="warning">
+              <Text>文字</Text>
+            </Callout>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              className="t--autocommit-modal-cta-button"
+              isLoading={isToggleAutocommitLoading}
+              kind="primary"
+              onClick={handleDisableAutocommit}
+              size="md"
+            >
+              按钮
+            </Button>
+          </ModalFooter>
+        </StyledModalContent>
+      </Modal>
     </Wrapper>
   );
 }
