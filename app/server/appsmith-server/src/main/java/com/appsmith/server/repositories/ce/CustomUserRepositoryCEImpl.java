@@ -10,8 +10,11 @@ import com.appsmith.server.helpers.ce.bridge.BridgeQuery;
 import com.appsmith.server.projections.IdOnly;
 import com.appsmith.server.repositories.BaseAppsmithRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.UpdateDefinition;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +25,8 @@ import java.util.Set;
 @Slf4j
 public class CustomUserRepositoryCEImpl extends BaseAppsmithRepositoryImpl<User> implements CustomUserRepositoryCE {
 
+    @Autowired
+    private ReactiveMongoTemplate mongoTemplate;
     @Override
     public Mono<User> findByEmail(String email, AclPermission aclPermission) {
         BridgeQuery<User> emailCriteria = Bridge.equal(User.Fields.email, email);
@@ -100,6 +105,24 @@ public class CustomUserRepositoryCEImpl extends BaseAppsmithRepositoryImpl<User>
             query.criteria(Criteria.where(User.Fields.email).regex(".*" + email + ".*", "i")); // Case-insensitive regex match
         }
         return query.count();
+    }
+
+    @Override
+    public Mono<User> deleteUser(String userId) {
+        if (userId == null) {
+            return Mono.error(new AppsmithException(AppsmithError.INVALID_PARAMETER, FieldName.ID));
+        }
+
+        // First, fetch the user to return it after deletion
+        return queryBuilder()
+            .byId(userId)
+            .one()
+            .flatMap(user -> {
+                // Use mongoTemplate to delete the user
+                return mongoTemplate.remove(user)
+                    .thenReturn(user);
+            })
+            .switchIfEmpty(Mono.error(new AppsmithException(AppsmithError.NO_RESOURCE_FOUND, "User", userId)));
     }
 
 }

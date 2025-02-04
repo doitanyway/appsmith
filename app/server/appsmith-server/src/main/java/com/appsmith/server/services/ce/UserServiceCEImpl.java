@@ -911,4 +911,9 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
     public Mono<Long> countUsers(String email) {
         return repository.countUsers(email);
     }
+
+    @Override
+    public Mono<User> deleteUser(String userId) {
+        return repository.deleteUser(userId);
+    }
 }

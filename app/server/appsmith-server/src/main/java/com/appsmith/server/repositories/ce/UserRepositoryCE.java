@@ -30,4 +30,5 @@ public interface UserRepositoryCE extends BaseRepository<User, String>, CustomUs
             Instant lastActiveAt, Boolean excludeSystemGenerated);
 
     Mono<User> findByEmailAndTenantId(String email, String tenantId);
+
 }

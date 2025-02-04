@@ -36,4 +36,7 @@ public interface CustomUserRepositoryCE extends AppsmithRepository<User> {
      * @return 用户总数
      */
     Mono<Long> countUsers(String email);
+
+    Mono<User> deleteUser(String userId);
+
 }

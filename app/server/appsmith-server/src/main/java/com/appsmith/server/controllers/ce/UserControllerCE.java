@@ -231,6 +231,14 @@ public class UserControllerCE {
 //    }
 
     @JsonView(Views.Public.class)
+    @DeleteMapping("/{id}")
+    public Mono<ResponseDTO<User>> deleteUser(@PathVariable("id") String id) {
+        return service.deleteUser(id)
+            .map(deletedUser -> new ResponseDTO<>(HttpStatus.OK.value(), deletedUser, "用户已删除", true))
+            .defaultIfEmpty(new ResponseDTO<>(HttpStatus.NOT_FOUND.value(), null, "用户不存在", false));
+    }
+
+    @JsonView(Views.Public.class)
     @GetMapping("/pageList")
     public Mono<ResponseDTO<UserPageList>> findAllByPagination(@RequestParam @Min(1) int page,          // 参数校验：最小值为1
                                                              @RequestParam @Min(1) @Max(100) int size,// 校验每页数量在1-100之间
