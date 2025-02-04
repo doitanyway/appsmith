@@ -143,26 +143,27 @@ export default function UserListPage() {
   async function fetchUserPageList() {
     try {
       // 调用接口，传入 PageListRequest 参数 { page, size, email }
-      const response = await UserApi.getUserPageList({
+      await UserApi.getUserPageList({
         page: pageIndex,
         size: pageSize,
         email: searchEmail,
-      });
-      // 假设接口返回的数据结构为 { data: 用户数组, total: 总条数 }
-      console.log("fetchUserPageList",response.data)
-      // @ts-ignore
-      setPageIndex(response.data?.page)
-      // @ts-ignore
-      setTotal(response.data?.total)
-      // @ts-ignore
-      const us = response.data?.users.map(v =>{
-        return {
-          key: v.id,
-          name: v.username,
-          email: v.email
-        }
+      }).then(v=>{
+        // 假设接口返回的数据结构为 { data: 用户数组, total: 总条数 }
+        console.log("fetchUserPageList",v)
+        // @ts-ignore
+        setPageIndex(v.data?.page)
+        // @ts-ignore
+        setTotal(v.data?.total)
+        // @ts-ignore
+        const us = v.data?.users.map(v =>{
+          return {
+            key: v.id,
+            name: v.username,
+            email: v.email
+          }
+        })
+        setUsers(us)
       })
-      setUsers(us)
     } catch (error) {
       console.error("获取用户列表失败：", error);
     }
