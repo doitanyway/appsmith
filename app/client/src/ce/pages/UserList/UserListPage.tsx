@@ -67,7 +67,8 @@ export default function UserListPage() {
   const [total, setTotal] = useState(0);  // 假设接口返回总条数
   const [users, setUsers] = useState<User[]>([]);
   const [searchEmail, setSearchEmail] = useState("");
-  const [isAutocommitDisableModalOpen,setIsAutocommitDisableModalOpen] = useState(true)
+  const [isAutocommitDisableModalOpen,setIsAutocommitDisableModalOpen] = useState(false)
+  const [delUser, setDelUser] = useState<User>()
 
   const columns = [
     {
@@ -107,15 +108,17 @@ export default function UserListPage() {
   ];
   const onClickSearchUser = () => {
     setPageIndex(1);
-    fetchUserPageList()
+    fetchUserPageList();
   };
 
   const handleEdit = (record:any) => {
     console.log("编辑用户:", record);
   };
 
-  const handleDelete = (record:any) => {
+  const handleDelete = (record:User) => {
     console.log("删除用户:", record);
+    setDelUser(record)
+    setIsAutocommitDisableModalOpen(true)
   };
 
   const onPageChange =(page:any,pageSize:any)=>{
@@ -157,11 +160,13 @@ export default function UserListPage() {
 
   function handleModalOpenChange(open: boolean) {
     console.log("onModalClose",open)
+    setIsAutocommitDisableModalOpen(false)
   }
 
   let isToggleAutocommitLoading;
   const handleDisableAutocommit = () => {
-
+    console.log("disable")
+    setIsAutocommitDisableModalOpen(false)
   } ;
   return (
     <Wrapper>
@@ -201,11 +206,11 @@ export default function UserListPage() {
       >
         <StyledModalContent data-testid="t--autocommit-git-modal">
           <StyledModalHeader>
-             标题
+            确定
           </StyledModalHeader>
           <ModalBody>
             <Callout kind="warning">
-              <Text>文字</Text>
+              <Text>确定是否删除用户: {delUser?.name} ?</Text>
             </Callout>
           </ModalBody>
           <ModalFooter>
