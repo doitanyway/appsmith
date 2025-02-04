@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, {useState,useEffect,useRef} from "react";
 import styled from "styled-components";
 import {
   Table,
@@ -70,6 +70,15 @@ export default function UserListPage() {
   const [isAutocommitDisableModalOpen,setIsAutocommitDisableModalOpen] = useState(false)
   const [delUser, setDelUser] = useState<User>()
 
+
+    const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const columns = [
     {
       title: "用户名",
@@ -115,14 +124,15 @@ export default function UserListPage() {
     console.log("编辑用户:", record);
   };
 
-  const handleDelete = (record:User) => {
+  const handleDelete = (record: User) => {
     console.log("删除用户:", record);
-    setDelUser(record)
-    setIsAutocommitDisableModalOpen(true)
-    UserApi.deleteUser(record.key).then(v=>{
-      setPageIndex(1)
-      fetchUserPageList();
-    })
+    setDelUser(record);
+    setIsAutocommitDisableModalOpen(true);
+    UserApi.deleteUser(record.key).then(v => {
+      if (isMountedRef.current) {
+        setPageIndex(1);
+      }
+    });
   };
 
   const onPageChange =(page:any,pageSize:any)=>{
@@ -159,7 +169,36 @@ export default function UserListPage() {
   }
 
   useEffect(() => {
-    fetchUserPageList();
+    let isMounted = true;
+    const fetchData = async () => {
+      try {
+        const response = await UserApi.getUserPageList({
+          page: pageIndex,
+          size: pageSize,
+          email: searchEmail,
+        });
+        if (isMounted) {
+          // @ts-ignore
+          setTotal(response.data?.total);
+          // @ts-ignore
+          const us = response.data?.users.map(v => ({
+            key: v.id,
+            name: v.username,
+            email: v.email
+          }));
+          setUsers(us);
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error("获取用户列表失败：", error);
+        }
+      }
+    };
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [pageIndex]);
 
   function handleModalOpenChange(open: boolean) {
