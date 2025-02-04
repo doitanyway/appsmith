@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from "react";
 import styled from "styled-components";
 import {Table, Button, Input, Text} from "@appsmith/ads";
-import {createMessage, UPGRADE} from "../../constants/messages";
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import UserApi from "ce/api/UserApi";
@@ -46,7 +45,7 @@ interface User {
 export default function UserListPage() {
   // const { carousel, footer, header } = props;
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);  // 假设接口返回总条数
   const [users, setUsers] = useState<User[]>([]);
   const [searchEmail, setSearchEmail] = useState("");
