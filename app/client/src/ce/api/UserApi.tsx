@@ -19,6 +19,12 @@ export interface VerifyTokenRequest {
   token: string;
 }
 
+export interface PageListRequest {
+  page: number;
+  size: number;
+  email: string;
+}
+
 export interface LeaveWorkspaceRequest {
   workspaceId: string;
 }
@@ -64,6 +70,7 @@ export class UserApi extends Api {
   static adminSettingsURL = "v1/admin/env";
   static restartServerURL = "v1/admin/restart";
   static sendTestEmailURL = "/v1/admin/send-test-email";
+  static pageListURL = "v1/users/pageList";
 
   static async updateUser(
     request: UpdateUserRequest,
@@ -73,6 +80,10 @@ export class UserApi extends Api {
 
   static async getCurrentUser(): Promise<AxiosPromise<ApiResponse>> {
     return Api.get(UserApi.currentUserURL);
+  }
+
+  static async getUserPageList(request: PageListRequest): Promise<AxiosPromise<ApiResponse>> {
+    return Api.get(UserApi.pageListURL,request);
   }
 
   static async forgotPassword(

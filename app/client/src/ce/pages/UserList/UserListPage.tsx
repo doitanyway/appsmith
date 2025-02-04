@@ -1,9 +1,11 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import styled from "styled-components";
 import {Table, Button, Input, Text} from "@appsmith/ads";
 import {createMessage, UPGRADE} from "../../constants/messages";
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
+import UserApi from "ce/api/UserApi";
+
 
 export const Wrapper = styled.div`
   flex-basis: calc(100% - ${(props) => props.theme.homePage.leftPane.width}px);
@@ -39,8 +41,9 @@ export const PageWrapper = styled.div`
 export default function UserListPage() {
   // const { carousel, footer, header } = props;
   const [pageIndex, setPageIndex] = useState(1);
-
-
+  const [total, setTotal] = useState(0);  // 假设接口返回总条数
+  const [users, setUsers] = useState([]);
+  const [searchEmail, setSearchEmail] = useState("");
 
   const columns = [
     {
@@ -99,9 +102,7 @@ export default function UserListPage() {
       address: { city: "Chicago" },
     },
   ];
-  const onClickNewUser =()=>{
-    console.log("onClickNewUser")
-  }
+
   const onClickSearchUser =()=>{
     console.log("onClickSearchUser")
   }
@@ -118,6 +119,28 @@ export default function UserListPage() {
     console.log(`page change ${page} ,${pageSize} `);
     setPageIndex(page)
   }
+
+  async function fetchUserPageList() {
+    try {
+      // 调用接口，传入 PageListRequest 参数 { page, size, email }
+      const response = await UserApi.getUserPageList({
+        page: pageIndex,
+        size: 10,
+        email: searchEmail,
+      });
+      // 假设接口返回的数据结构为 { data: 用户数组, total: 总条数 }
+      console.log("fetchUserPageList",response.data)
+      // setUsers(response.data.data);
+      // setTotal(response.data.total);
+    } catch (error) {
+      console.error("获取用户列表失败：", error);
+    }
+  }
+
+  useEffect(() => {
+
+    fetchUserPageList();
+  }, [pageIndex, searchEmail]);
 
   return (
     <Wrapper>
@@ -140,9 +163,6 @@ export default function UserListPage() {
           <Input  size="md"  aria-label="Add" className="space-y-4" placeholder={"输入搜索"} ></Input>
           <Button data-testid="t--button-upgrade" onClick={onClickSearchUser} size="md">
             搜索
-          </Button>
-          <Button data-testid="t--button-upgrade" onClick={onClickNewUser} size="md">
-            新增用户
           </Button>
         </OperationWrapper>
         <Table columns={columns} data={fakeData} isSortable />
