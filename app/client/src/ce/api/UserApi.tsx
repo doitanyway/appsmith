@@ -71,6 +71,7 @@ export class UserApi extends Api {
   static restartServerURL = "v1/admin/restart";
   static sendTestEmailURL = "/v1/admin/send-test-email";
   static pageListURL = "v1/users/pageList";
+  static deleteUserURL = "v1/users";
 
   static async updateUser(
     request: UpdateUserRequest,
@@ -166,6 +167,14 @@ export class UserApi extends Api {
     request: LeaveWorkspaceRequest,
   ): Promise<AxiosPromise<LeaveWorkspaceRequest>> {
     return Api.put(UserApi.leaveWorkspaceURL + "/" + request.workspaceId);
+  }
+
+
+
+  static async deleteUser(
+    id: string,
+  ): Promise<AxiosPromise<ApiResponse>> {
+    return Api.delete(UserApi.deleteUserURL + "/" + id);
   }
 
   static async fetchFeatureFlags(): Promise<

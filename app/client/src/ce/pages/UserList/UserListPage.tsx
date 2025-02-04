@@ -119,6 +119,10 @@ export default function UserListPage() {
     console.log("删除用户:", record);
     setDelUser(record)
     setIsAutocommitDisableModalOpen(true)
+    UserApi.deleteUser(record.key).then(v=>{
+      setPageIndex(1)
+      fetchUserPageList();
+    })
   };
 
   const onPageChange =(page:any,pageSize:any)=>{
